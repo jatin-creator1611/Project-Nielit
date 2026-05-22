@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Your Order</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .order-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .menu-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .menu-item label {
+            font-weight: normal;
+        }
+
+        .price {
+            margin-left: auto;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .order-list {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .order-list h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .order-list ol {
+            list-style-type: decimal;
+            padding-left: 20px;
+        }
+
+        .order-list li {
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .submit-button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            box-sizing: border-box;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .open-order-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .open-order-button:hover {
+            background-color: #1e7e34;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="open-order-button" onclick="openOrderLink()">Open Order Form</button>
+
+    <div class="order-container" id="orderForm" style="display:none;">
+        <h2>Place Your Order</h2>
+
+        <div class="form-group">
+            <label for="menu">Select from Menu:</label>
+            <select id="menu">
+                <option value="">-- Select an Item --</option>
+                <option value="burger">Burger</option>
+                <option value="pizza">Pizza</option>
+                <option value="fries">Fries</option>
+                <option value="soda">Soda</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Add Extras:</label>
+            <div class="menu-item">
+                <input type="checkbox" id="cheese" name="extras" value="cheese">
+                <label for="cheese">Cheese <span class="price">Rs 50</span></label>
+            </div>
+            <div class="menu-item">
+                <input type="checkbox" id="olives" name="extras" value="olives">
+                <label for="olives">Olives <span class="price">Rs 30</span></label>
+            </div>
+            <div class="menu-item">
+                <input type="checkbox" id="extra_patty" name="extras" value="extra_patty">
+                <label for="extra_patty">Extra Patty <span class="price">Rs 80</span></label>
+            </div>
+        </div>
+
+        <div class="order-list">
+            <h3>Your Order:</h3>
+            <ol id="orderedItems">
+                </ol>
+        </div>
+
+        <button type="submit" class="submit-button">Submit Order</button>
+    </div>
+
+    <script>
+        function openOrderLink() {
+            document.getElementById('orderForm').style.display = 'block';
+            // You can replace the line below with the actual link you want to open in a new tab/window
+            // window.open('YOUR_ORDER_LINK_HERE', '_blank');
+        }
+
+        const menuDropdown = document.getElementById('menu');
+        const extrasCheckboxes = document.querySelectorAll('input[name="extras"]');
+        const orderedItemsList = document.getElementById('orderedItems');
+
+        menuDropdown.addEventListener('change', updateOrder);
+        extrasCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateOrder);
+        });
+
+        function updateOrder() {
+            orderedItemsList.innerHTML = ''; // Clear the current list
+            const selectedMenuItem = menuDropdown.value;
+            if (selectedMenuItem) {
+                const listItem = document.createElement('li');
+                listItem.textContent = getItemName(selectedMenuItem);
+                orderedItemsList.appendChild(listItem);
+            }
+
+            extrasCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = getItemName(checkbox.value);
+                    orderedItemsList.appendChild(listItem);
+                }
+            });
+        }
+
+        function getItemName(value) {
+            switch (value) {
+                case 'burger':
+                    return 'Burger (Price will be shown on order confirmation)';
+                case 'pizza':
+                    return 'Pizza (Price will be shown on order confirmation)';
+                case 'fries':
+                    return 'Fries (Price will be shown on order confirmation)';
+                case 'soda':
+                    return 'Soda (Price will be shown on order confirmation)';
+                case 'cheese':
+                    return 'Cheese - Rs 50';
+                case 'olives':
+                    return 'Olives - Rs 30';
+                case 'extra_patty':
+                    return 'Extra Patty - Rs 80';
+                default:
+                    return '';
+            }
+        }
+    </script>
+
+</body>
+</html>
